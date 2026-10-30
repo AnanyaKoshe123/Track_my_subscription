@@ -1,0 +1,6 @@
+{
+  "name": "Track My Subscription",
+  "description": "Premium SaaS Subscription Management Platform with multi-currency tracking, renewals, analytics, AI assistant, invoice parser, and admin approval workflows.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

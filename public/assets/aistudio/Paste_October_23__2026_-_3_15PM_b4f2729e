@@ -1,0 +1,1019 @@
+# Project: Track My Subscription — Premium SaaS Subscription Management Platform
+
+## 1. Project Overview
+
+Build a complete, production-ready subscription tracking SaaS web application named **Track My Subscription**.
+
+The application should allow users to manage all their recurring subscriptions in one place, monitor monthly and yearly expenses, receive renewal reminders, analyze spending, parse invoices using AI, import subscriptions in bulk, and connect external applications using webhooks.
+
+Use the uploaded dashboard screenshot as the primary UI reference. Adapt its three-part layout, compact navigation, KPI cards, spending analytics, transaction list, and right-side AI assistant panel for a modern subscription management platform.
+
+Do not create only a static UI or frontend prototype. All forms, dashboards, authentication, database operations, reports, settings, and integrations must work and persist data through Supabase.
+
+## 2. Mandatory Technology Stack
+
+Frontend:
+- Next.js using the App Router.
+- React and TypeScript with strict type checking.
+- Tailwind CSS for styling.
+- Lucide React for interface icons.
+- Recharts for charts and analytics.
+- React Hook Form and Zod for form handling and validation.
+
+Backend:
+- Supabase PostgreSQL database.
+- Supabase Auth for authentication.
+- Supabase Row Level Security (RLS) for data protection.
+- Supabase Storage for invoice files and relevant documents.
+- Supabase Edge Functions for secure server-side logic, webhook processing, scheduled jobs where supported, and AI integrations.
+
+Additional requirements:
+- Use reusable components and a maintainable folder structure.
+- Use server-side validation for sensitive operations.
+- Use environment variables for all credentials.
+- Ensure desktop, tablet, and mobile responsiveness.
+
+I will provide the Supabase project URL, publishable/anon key as applicable, and any additional credentials required. Integrate with my existing Supabase project instead of creating a new backend.
+
+Never expose the Supabase service-role key, AI API keys, or webhook signing secrets in client-side code.
+
+## 3. Premium UI Design
+
+Create a premium, elegant, modern financial SaaS dashboard inspired by the uploaded reference screenshot.
+
+Suggested color palette:
+- Primary dark teal: #004547
+- Deep navy: #172B3A
+- Premium violet: #7657E8
+- Soft lavender: #F0EDFF
+- Background: #F6F7F9
+- Card background: #FFFFFF
+- Main text: #1F2937
+- Secondary text: #737B8C
+- Success: #12B886
+- Warning: #F59E0B
+- Danger: #E5484D
+
+Design requirements:
+- Use a clean, premium, minimalist interface.
+- Use soft shadows, subtle borders, rounded cards, and consistent spacing.
+- Use a light theme by default with an optional dark theme.
+- Use compact cards and optimize screen space.
+- Avoid oversized empty spaces and unnecessary animations.
+- Do not introduce horizontal scrolling at common desktop resolutions.
+- Ensure all content fits inside the viewport whenever practical.
+- Use responsive tables, compact lists, and mobile-friendly cards.
+- Add appropriate loading states, skeletons, empty states, error messages, and success notifications.
+- Use recognizable subscription logos and consistent icon sizing.
+
+## 4. Main Application Layout
+
+Create a dashboard with three main sections on desktop.
+
+### Left Sidebar
+
+Display:
+- Application logo and Track My Subscription name.
+- Overview.
+- My Subscriptions.
+- Upcoming Renewals.
+- Spending Analytics.
+- Categories.
+- Reports.
+- Invoice Parser.
+- Bulk Edit.
+- AI Assistant.
+- Integrations.
+- Chrome Extension.
+- Notifications.
+- Settings.
+
+At the bottom:
+- User avatar and profile.
+- Current plan.
+- Help and support.
+- Logout.
+
+Highlight the active navigation item. On mobile, convert the sidebar into a collapsible navigation drawer.
+
+### Main Dashboard
+
+Display:
+- Welcome message with the user's name.
+- Current date.
+- Search bar.
+- Currency selector.
+- Date-range selector.
+- Add Subscription button.
+- KPI cards.
+- Subscription categories.
+- Subscription spending charts.
+- Upcoming renewals.
+- Recent subscription activity.
+
+### Optional Right-Side AI Panel
+
+Create an AI assistant panel inspired by the uploaded reference.
+
+It should include:
+- Ask anything input.
+- Suggested prompts.
+- AI-generated subscription summaries.
+- Spending-saving recommendations.
+- Upcoming renewal insights.
+- AI response history.
+- Copy response and feedback actions.
+
+Allow users to collapse this panel to provide more space for the main dashboard.
+
+## 5. User and Admin Authentication
+
+Implement complete authentication with two roles: User and Admin.
+
+### User Registration
+
+- Allow users to register with name, email, and password.
+- Support email verification.
+- Create a pending-access request after registration.
+- Display a message explaining that an administrator must approve access.
+- Do not allow pending, rejected, suspended, or unverified users to access protected application features.
+
+### User Login
+
+- Support email/password login.
+- Use Supabase Auth securely.
+- Check email verification and administrator approval status.
+- Allow access only when the user is verified, approved, and active.
+- Show clear messages for pending approval, rejected access, or suspended accounts.
+- Provide forgot-password and reset-password flows.
+- Persist authenticated sessions securely using recommended Supabase SSR practices.
+
+### Admin Login and Access
+
+- Create a separate admin login route and admin dashboard.
+- Admin privileges must be assigned securely by a trusted server-side process, not by a user-editable registration field.
+- Never rely on hiding admin UI elements alone to enforce permissions.
+
+### Admin Dashboard
+
+Include:
+- Total registered users.
+- Pending access requests.
+- Approved users.
+- Rejected and suspended users.
+- User search and filtering.
+- User profile details.
+- Approve, reject, suspend, and reactivate actions.
+- View last login and registration date where available.
+- Assign or revoke administrative privileges through a secure, audited process.
+- View subscription management platform activity and system health.
+
+When an admin approves a user, update the user's access status in Supabase and permit access to the user dashboard.
+
+Use server-validated authorization and RLS policies for protected data and admin actions. Prevent ordinary users from changing their own approval status or role.
+
+## 6. Main Dashboard and KPI Cards
+
+Create compact dashboard cards for:
+
+1. Total Active Subscriptions.
+2. Total Monthly Subscription Cost.
+3. Total Yearly Subscription Cost.
+4. Upcoming Renewals.
+5. Potential Savings.
+6. Overdue or Failed Payments, when payment information is available.
+
+Make the total subscription amount visually prominent.
+
+The main total must update immediately when a subscription is added, edited, renewed, cancelled, or deleted.
+
+Display percentage changes only when a valid comparison period exists.
+
+Include:
+- Monthly recurring expense chart.
+- Yearly expense trend.
+- Spending by category.
+- Spending by service.
+- Upcoming renewal timeline.
+- Recently added subscriptions.
+- Recent invoice activity.
+
+Every KPI and chart must use real data belonging to the authenticated user.
+
+## 7. Currency Selection and Total Calculation
+
+Provide a global currency selector at the top of the dashboard.
+
+Support:
+- INR — Indian Rupee (₹).
+- USD — US Dollar ($).
+- EUR — Euro (€).
+- GBP — British Pound (£).
+- AED — UAE Dirham (د.إ).
+- Other currencies through a configurable currency list.
+
+Requirements:
+- Display the selected currency symbol next to all relevant amounts.
+- Display the total subscription amount prominently near the top of the dashboard.
+- Update dashboard totals, charts, reports, and subscription summaries when the display currency changes.
+- Save the user's preferred display currency.
+- Store each subscription's original currency separately from the display currency.
+- Do not simply add amounts in different currencies together.
+- Use a reliable exchange-rate provider or a securely maintained exchange-rate table for currency conversion.
+- Show the conversion date and rate when converted amounts are displayed.
+- If exchange-rate data is unavailable, display the original-currency totals separately instead of inventing a conversion rate.
+
+Example:
+
+Selected currency: INR
+
+Total Monthly Subscription Cost: ₹12,450
+
+Selected currency: USD
+
+Total Monthly Subscription Cost: $145.20
+
+These are illustrative examples. Calculate actual values from saved subscription data and available exchange rates.
+
+## 8. My Subscriptions Page
+
+Create a complete subscription management page.
+
+Display subscriptions as compact cards or a responsive table.
+
+Each subscription should include:
+- Official service logo or recognizable service icon.
+- Service name.
+- Subscription plan.
+- Category tag.
+- Billing amount.
+- Original currency.
+- Billing frequency.
+- Next renewal date.
+- Payment method or payment source, if supplied.
+- Subscription status.
+- Reminder status.
+- Notes.
+- Edit, view details, and delete actions.
+
+Support the following billing cycles:
+- Weekly.
+- Monthly.
+- Quarterly.
+- Half-yearly.
+- Yearly.
+- Custom recurring interval.
+
+Support statuses:
+- Active.
+- Trial.
+- Paused.
+- Cancelled.
+- Expired.
+
+Features:
+- Search by service name.
+- Filter by category, billing cycle, status, and renewal date.
+- Sort by amount, name, and renewal date.
+- Toggle between grid and list views.
+- Select and edit multiple subscriptions.
+- Export subscription data.
+- Add and remove categories.
+- View a complete subscription detail page.
+
+Do not assume that tracking a subscription automatically cancels it or authorizes payment. Clearly distinguish tracking from external billing actions.
+
+## 9. Add Subscription Page
+
+This is one of the most important modules.
+
+Create a dedicated Add Subscription page with two options:
+
+### Option A: Choose a Predefined Subscription
+
+Display a searchable catalog of predefined subscription templates with recognizable logos or icons.
+
+Organize templates into category sections and display them as compact cards.
+
+Every template should include:
+- Logo or icon.
+- Service name.
+- Category.
+- Available or commonly known plan names, when verified.
+- Indicative price where reliably sourced.
+- Billing frequency.
+- Country or market availability, where relevant.
+- Add Subscription button.
+
+The template catalog must be data-driven and easy to update without rewriting frontend components.
+
+### Indian Subscription Template Catalog
+
+Seed the catalog with a broad selection of Indian and India-available services.
+
+Include the following examples and expand the catalog wherever possible:
+
+**Entertainment and OTT**
+- Netflix.
+- Amazon Prime Video.
+- JioHotstar.
+- Sony LIV.
+- ZEE5.
+- aha.
+- Sun NXT.
+- Hoichoi.
+- Lionsgate Play.
+- Apple TV+.
+- YouTube Premium.
+
+**Music and Audio**
+- Spotify Premium.
+- YouTube Music Premium.
+- Apple Music.
+- Amazon Music.
+- JioSaavn Pro.
+- Gaana, subject to current availability.
+
+**Productivity and AI**
+- ChatGPT Plus and other available ChatGPT plans.
+- Google One.
+- Microsoft 365.
+- Adobe Creative Cloud.
+- Canva Pro.
+- Notion.
+- Grammarly.
+- GitHub Copilot.
+- Cursor.
+- Claude plans where available.
+- Perplexity plans where available.
+- Dropbox.
+- iCloud+.
+
+**Telecom and Digital Services**
+- Airtel plans with recurring charges where applicable.
+- Jio recurring plans where applicable.
+- Vi recurring plans where applicable.
+- Google Play subscriptions.
+- Apple App Store subscriptions.
+
+**Fitness and Wellness**
+- Cult.fit.
+- HealthifyMe.
+- FITTR.
+- Headspace.
+- Calm.
+
+**Education**
+- Unacademy.
+- Physics Wallah.
+- Coursera.
+- Udemy subscription plans where offered.
+- Duolingo Super.
+- LinkedIn Premium.
+- Skillshare.
+
+**Cloud and Developer Tools**
+- Supabase.
+- Vercel.
+- AWS.
+- DigitalOcean.
+- Figma.
+- JetBrains.
+- Postman plans where applicable.
+
+**Shopping and Memberships**
+- Amazon Prime.
+- Flipkart VIP or other currently available membership plans.
+- Swiggy One.
+- Zomato Gold.
+- Blinkit membership plans where available.
+
+**Finance and Other Services**
+- Google Workspace.
+- Domain registrations.
+- Website hosting.
+- VPN services.
+- Antivirus software.
+- Gaming subscriptions.
+- News and digital publications.
+- Custom insurance or recurring service payments, where the user wants to track them.
+
+This is an initial catalog, not a claim that every named service currently offers an active recurring subscription in India.
+
+Verify service availability, current plan names, pricing, billing frequency, and logos before publishing them as current information. Do not hardcode old prices or assume all services offer monthly billing.
+
+Where prices vary by plan, platform, tax, promotion, or location, display “Price varies” or request the user's actual price.
+
+### Selecting a Template
+
+When a user selects a template:
+- Pre-fill service name, logo, category, and supported billing options.
+- Let the user select their actual plan.
+- Enter or confirm the actual amount.
+- Choose the billing currency.
+- Set the billing frequency.
+- Set the next renewal date.
+- Select the payment source if known.
+- Add notes and reminders.
+- Save the subscription to Supabase.
+
+Never automatically assume the indicative catalog price is the user's actual charge.
+
+### Option B: Add a Custom Subscription
+
+Allow users to add any service not present in the catalog.
+
+Fields:
+- Subscription name.
+- Upload logo or choose an icon.
+- Category.
+- Plan name.
+- Amount.
+- Currency.
+- Billing frequency.
+- Start date.
+- Next billing date.
+- Trial end date, if applicable.
+- Payment method.
+- Renewal reminders.
+- Notes.
+- Website URL, if applicable.
+- Status.
+
+Validate required fields and dates. Display an appropriate preview before saving.
+
+After saving, immediately update the subscription list, total amounts, category summaries, renewal schedule, and relevant reports.
+
+## 10. Subscription Categories
+
+Display category tags directly below the dashboard search bar, inspired by the compact design in the reference screenshot.
+
+Include:
+- All.
+- Entertainment.
+- Music.
+- Productivity.
+- AI Tools.
+- Cloud and Hosting.
+- Education.
+- Fitness and Wellness.
+- Shopping.
+- Food and Delivery.
+- Telecom.
+- Finance.
+- Gaming.
+- News.
+- Utilities.
+- Other.
+
+Requirements:
+- Each category should have a distinct, subtle color and optional icon.
+- Display the number of subscriptions within each category.
+- Clicking a category filters the subscription list and updates relevant summaries.
+- Show the selected category clearly.
+- Allow users to create, rename, and delete custom categories.
+- Prevent deleting a category that still contains subscriptions unless the user chooses a reassignment.
+- Support filtering by multiple categories where practical.
+- Use horizontally wrapping tags rather than a horizontally scrolling strip on desktop.
+- On smaller screens, wrap tags onto multiple lines or use a compact category filter.
+
+## 11. Upcoming Renewals and Notifications
+
+Create a dedicated Upcoming Renewals page.
+
+Display:
+- Renewals due today.
+- Renewals in the next 7 days.
+- Renewals in the next 30 days.
+- Trial expiration dates.
+- Monthly and annual renewals.
+
+Allow reminder preferences such as:
+- 7 days before.
+- 3 days before.
+- 1 day before.
+- On the renewal date.
+
+Support in-app notifications and email notifications through a configured email provider or Supabase-compatible integration.
+
+Do not claim that notifications are delivered unless the relevant delivery service is configured and the delivery result is handled.
+
+Provide a notification history and read/unread status.
+
+## 12. Chrome Extension
+
+Create a functional Chrome Extension companion for Track My Subscription.
+
+Use Manifest V3.
+
+Extension features:
+- Secure sign-in using the supported authentication flow.
+- Add a subscription from the current website.
+- Detect supported checkout or pricing pages where technically feasible.
+- Suggest the service name, website, and plan.
+- Let users enter or confirm the amount and renewal cycle.
+- Display upcoming renewal reminders.
+- Open the full web dashboard.
+- Synchronize subscription data with Supabase through secure, authorized requests.
+
+Security requirements:
+- Never store the Supabase service-role key or other server secrets in the extension.
+- Never collect passwords, payment card details, or sensitive checkout information.
+- Request only the browser permissions actually needed.
+- Explain permissions clearly.
+- Do not claim that arbitrary subscription purchases can be detected automatically.
+- Build and document the extension as a separate component with its own manifest, popup UI, authentication handling, and API integration.
+
+If automatic detection is unavailable for a website, provide a convenient manual Add Subscription action.
+
+## 13. AI Assistant
+
+Implement a useful AI-powered subscription assistant.
+
+Example questions:
+- How much do I spend on subscriptions each month?
+- Which subscriptions cost the most?
+- What renewals are coming up?
+- Which subscriptions have not been used recently?
+- Where can I reduce my monthly expenses?
+- Compare my monthly spending with the previous month.
+- Summarize my subscription expenses by category.
+- Find duplicate services that may overlap in purpose.
+- How much could I save by switching plans?
+
+Features:
+- Conversational chat interface.
+- Context-aware answers based on the authenticated user's subscription data.
+- Suggested prompts.
+- Chat history.
+- Spending summaries.
+- Cost optimization recommendations.
+- Natural-language subscription entry assistance.
+- Confirmation before creating or changing records.
+- Clear separation between actual calculations and AI-generated recommendations.
+
+Use an AI API through a protected server-side route or Supabase Edge Function.
+
+Never expose AI API keys in the browser.
+
+The AI must not invent subscriptions, prices, transactions, exchange rates, or renewal dates. Calculate financial totals using validated application logic and database records instead of relying on language-model arithmetic.
+
+Ensure users can only query their own data. Minimize sensitive information sent to the AI provider, and disclose relevant external processing.
+
+## 14. Invoice Parser
+
+Build an Invoice Parser page that extracts subscription information from uploaded invoices, receipts, and billing documents.
+
+Support:
+- PDF invoices.
+- Image-based invoices.
+- PNG and JPG receipts.
+- Relevant email invoice attachments where an authorized integration exists.
+
+Use Supabase Storage for secure document storage.
+
+Extraction fields:
+- Service name.
+- Merchant name.
+- Invoice number.
+- Invoice date.
+- Billing amount.
+- Currency.
+- Tax amount, if present.
+- Billing period.
+- Subscription plan.
+- Next renewal date, if explicitly present.
+- Payment status, if present.
+- Customer reference, only when necessary.
+
+Workflow:
+1. User uploads a document.
+2. Validate file type and size.
+3. Store the file securely.
+4. Extract text using an appropriate parser or OCR service.
+5. Use AI to structure the extracted information.
+6. Display a review screen.
+7. Let the user edit incorrect or missing fields.
+8. Let the user save the extracted subscription or invoice.
+9. Show a confirmation and update relevant dashboard information.
+
+Do not automatically create subscriptions from unverified AI extraction results.
+
+Detect possible duplicate invoices and ask the user before importing duplicate records.
+
+Keep invoice files private and authorize every file access.
+
+## 15. Bulk Edit and Bulk Import
+
+Create a Bulk Edit page and selection mode in My Subscriptions.
+
+Support:
+- Select multiple subscriptions.
+- Change category.
+- Change status.
+- Change reminder settings.
+- Change payment source.
+- Update billing frequency.
+- Apply supported currency changes without incorrectly changing the underlying monetary value.
+- Delete multiple subscriptions after confirmation.
+- Import CSV files.
+- Export CSV files.
+
+Import workflow:
+1. Upload CSV.
+2. Preview records.
+3. Map incoming columns to application fields.
+4. Validate required values and supported currencies.
+5. Highlight invalid records.
+6. Detect possible duplicates.
+7. Confirm the import.
+8. Show successful and failed records.
+
+Use safe database operations, validation, and clear results. Do not silently skip failed rows.
+
+## 16. Reports and Spending Analytics
+
+Build a Reports section with useful, interactive reports.
+
+Report types:
+- Monthly subscription spending.
+- Annual subscription spending.
+- Spending by category.
+- Spending by service.
+- Upcoming renewal forecast.
+- Subscription price changes, when recorded.
+- Active versus cancelled subscriptions.
+- Trial subscriptions and trial expirations.
+- Highest-cost subscriptions.
+- Subscription history.
+- Potential savings estimates.
+
+Features:
+- Date-range selection.
+- Currency selection.
+- Interactive charts.
+- Detailed data tables.
+- CSV export.
+- Printable reports.
+- PDF export where supported.
+
+Use actual saved data and clearly label estimated costs.
+
+Normalize recurring expenses to monthly and yearly equivalents for comparison. Explain the assumptions used for weekly, quarterly, and custom billing cycles.
+
+Do not count cancelled subscriptions as active recurring costs after their effective cancellation date.
+
+## 17. Webhook Integrations
+
+Create an Integrations page with webhook management.
+
+Features:
+- Create webhook endpoints.
+- Configure event subscriptions.
+- Generate signing secrets securely.
+- Enable and disable endpoints.
+- Display delivery history.
+- Show response status, timestamp, and retry status.
+- Support manual retry where safe.
+- Rotate signing secrets.
+- Test endpoint connectivity.
+
+Example events:
+- subscription.created
+- subscription.updated
+- subscription.cancelled
+- subscription.renewal_approaching
+- invoice.uploaded
+- invoice.parsed
+- bulk_import.completed
+- user.approved
+
+Requirements:
+- Deliver webhooks from server-side infrastructure.
+- Sign webhook payloads using a standard secure signing method.
+- Include timestamps and event IDs.
+- Implement idempotency and retry handling.
+- Protect against SSRF, unauthorized endpoints, replay attacks, and secret leakage.
+- Validate endpoint URLs and restrict access to internal network addresses.
+- Store secrets securely and reveal them only when initially generated where appropriate.
+- Never send another user's private subscription data to an unauthorized endpoint.
+
+Document webhook payload formats and verification steps.
+
+## 18. Integrations Page
+
+Provide an extensible integrations interface for:
+- Chrome Extension.
+- Webhooks.
+- Email provider.
+- AI provider.
+- Invoice OCR or document parser.
+- Gmail or other email integrations, where explicitly configured and authorized.
+
+For email-based subscription detection:
+- Request the minimum necessary OAuth permissions.
+- Obtain user consent before connecting an account.
+- Process only relevant billing and renewal messages.
+- Avoid storing unnecessary email content.
+- Display detected subscription candidates for review.
+- Never claim Gmail detection is active without a working OAuth integration and configured backend processing.
+
+Show connection status, configuration steps, last successful sync, and disconnect actions.
+
+## 19. Settings and Profile
+
+Include:
+- Name and profile photo.
+- Email address.
+- Preferred currency.
+- Time zone.
+- Date format.
+- Theme preferences.
+- Notification settings.
+- Default reminder schedule.
+- Default billing currency.
+- Category management.
+- Connected integrations.
+- Data export.
+- Account deletion request.
+- Password and session management.
+
+Respect the user's time zone when calculating renewal dates and sending reminders.
+
+## 20. Supabase Database Design
+
+Create a normalized PostgreSQL schema with appropriate foreign keys, indexes, timestamps, and constraints.
+
+Suggested tables:
+
+1. profiles
+   - id references auth.users
+   - full_name
+   - avatar_url
+   - role
+   - approval_status
+   - preferred_currency
+   - timezone
+   - created_at
+   - updated_at
+
+2. subscription_templates
+   - id
+   - service_name
+   - slug
+   - logo_url
+   - category_id
+   - country_code
+   - supported_currencies
+   - indicative_price
+   - billing_options
+   - official_website
+   - is_active
+   - updated_at
+
+3. categories
+   - id
+   - user_id, nullable for approved global categories
+   - name
+   - icon
+   - color
+   - created_at
+
+4. subscriptions
+   - id
+   - user_id
+   - template_id, nullable
+   - category_id
+   - service_name
+   - logo_url
+   - plan_name
+   - amount
+   - currency
+   - billing_cycle
+   - custom_interval
+   - start_date
+   - next_billing_date
+   - trial_end_date
+   - status
+   - payment_method_label
+   - reminder_preferences
+   - notes
+   - website_url
+   - created_at
+   - updated_at
+
+5. invoices
+   - id
+   - user_id
+   - subscription_id, nullable
+   - storage_path
+   - invoice_number
+   - merchant_name
+   - invoice_date
+   - amount
+   - currency
+   - tax_amount
+   - billing_period_start
+   - billing_period_end
+   - parsing_status
+   - extracted_data
+   - created_at
+
+6. notifications
+   - id
+   - user_id
+   - subscription_id, nullable
+   - notification_type
+   - message
+   - scheduled_at
+   - sent_at
+   - read_at
+   - status
+
+7. webhook_endpoints
+   - id
+   - user_id
+   - endpoint_url
+   - subscribed_events
+   - enabled
+   - created_at
+
+8. webhook_deliveries
+   - id
+   - endpoint_id
+   - event_id
+   - event_type
+   - response_status
+   - attempt_count
+   - delivered_at
+   - status
+
+9. ai_conversations
+   - id
+   - user_id
+   - title
+   - created_at
+   - updated_at
+
+10. ai_messages
+    - id
+    - conversation_id
+    - role
+    - content
+    - created_at
+
+11. exchange_rates
+    - id
+    - base_currency
+    - target_currency
+    - exchange_rate
+    - effective_at
+    - source
+
+12. audit_logs
+    - id
+    - actor_user_id
+    - action
+    - target_user_id, nullable
+    - metadata
+    - created_at
+
+13. user_integrations
+    - id
+    - user_id
+    - provider
+    - connection_status
+    - external_account_reference
+    - last_synced_at
+    - created_at
+
+Adapt the schema when needed, and create additional tables for billing events, idempotency, jobs, or admin configuration when appropriate.
+
+Use migrations checked into the project rather than relying on manual, undocumented database edits.
+
+Store money using a suitable exact decimal or integer-minor-unit representation, and never use floating-point arithmetic for financial totals.
+
+Keep global catalog templates separate from each user's actual subscriptions.
+
+## 21. Supabase Security and RLS
+
+Enable Row Level Security on all tables containing private user information.
+
+Implement policies so:
+- Users can view and modify only their own subscriptions.
+- Users can view and manage only their own invoices.
+- Users can view their own notifications and AI conversation history.
+- Users can access only their own integration settings and webhook configuration.
+- Approved global templates can be read by authorized users.
+- Only authorized administrators can approve, reject, or suspend accounts.
+- Ordinary users cannot grant themselves admin roles.
+- Approval status cannot be changed by an ordinary user.
+- Private Storage objects can be accessed only by authorized owners and administrators where appropriate.
+- Sensitive admin operations run through trusted server-side authorization.
+
+Do not assume authentication alone provides authorization.
+
+Test the policies using separate normal-user, pending-user, and admin accounts.
+
+Never disable RLS merely to make the frontend work.
+
+## 22. Subscription Calculations
+
+Implement a shared, tested financial calculation module.
+
+Calculate:
+- Active monthly recurring cost.
+- Annualized recurring cost.
+- Total by original currency.
+- Total in selected display currency.
+- Spending by category.
+- Next 7-day renewal amount.
+- Next 30-day renewal amount.
+- Potential savings based on explicit assumptions.
+
+For weekly billing, use a documented annualization convention. For quarterly and half-yearly billing, normalize by the number of billing periods per year. Handle custom intervals explicitly.
+
+Exclude cancelled and expired subscriptions from future recurring totals as appropriate. Treat free trials and paused subscriptions according to clearly defined rules.
+
+For mixed currencies, convert only when a valid exchange rate exists. Never add ₹1,000 and $20 as though they were the same currency.
+
+Ensure all totals remain consistent across dashboard cards, tables, reports, and AI summaries.
+
+## 23. User Experience and Accessibility
+
+- Use accessible labels, keyboard navigation, and appropriate color contrast.
+- Provide clear validation messages.
+- Confirm destructive actions.
+- Avoid full-page reloads for ordinary interactions where appropriate.
+- Use optimistic updates only when failures can be rolled back safely.
+- Include pagination or virtualization for large lists.
+- Use responsive chart layouts.
+- Provide meaningful empty states for new accounts.
+- Ensure all buttons and menu items have real functionality.
+- Avoid placeholder links and fake analytics.
+
+## 24. Performance and Code Quality
+
+- Use reusable TypeScript components.
+- Separate UI, business logic, database access, and server-side integrations.
+- Use server components where appropriate.
+- Use client components only when interactivity is needed.
+- Validate all inputs with Zod or equivalent server-side validation.
+- Add database indexes for frequently queried columns.
+- Avoid unnecessary API calls.
+- Handle loading, empty, unauthorized, and error states.
+- Add tests for authentication, RLS, subscription calculations, bulk operations, invoice parsing, and webhook security.
+- Document setup and deployment instructions.
+
+## 25. Required Deliverables
+
+Produce a complete implementation with:
+
+1. Responsive dashboard matching the reference design.
+2. User registration, login, email verification, and admin approval.
+3. Secure admin dashboard.
+4. Add Subscription page with a searchable predefined catalog.
+5. Custom subscription creation and editing.
+6. Global currency selector and correct financial calculations.
+7. Category tags beneath the search bar.
+8. Subscription list, search, filters, and bulk editing.
+9. Renewal reminders and notifications.
+10. AI Assistant with protected backend integration.
+11. Invoice upload, extraction, review, and saving.
+12. CSV bulk import and export.
+13. Interactive reports and analytics.
+14. Chrome Extension source code and integration documentation.
+15. Secure webhook management and delivery processing.
+16. Supabase migrations, RLS policies, Storage policies, and seed data.
+17. Environment variable example file.
+18. Unit and integration tests.
+19. Deployment instructions for the Next.js application and Supabase.
+20. Documentation describing all required external API credentials and setup steps.
+
+## 26. Implementation Instructions
+
+Build the project in a logical order:
+
+Phase 1: Project setup, design system, responsive layout, and Supabase connection.
+
+Phase 2: Database migrations, authentication, profiles, admin authorization, approval workflow, and RLS.
+
+Phase 3: Subscription templates, custom subscription management, categories, currency calculations, and dashboard.
+
+Phase 4: Renewals, notifications, reports, bulk editing, and CSV import/export.
+
+Phase 5: Invoice parsing, AI assistant, webhooks, and integrations.
+
+Phase 6: Chrome Extension, automated tests, security review, optimization, and deployment.
+
+Do not stop after creating the dashboard UI.
+
+Do not replace backend functionality with mock arrays, localStorage, or hardcoded totals. Seeded templates may be used for the catalog, but user-generated subscription records must be persisted in Supabase.
+
+If a feature requires an external API or credential I have not supplied, build the integration interface, secure backend implementation, configuration instructions, and a clear not-configured state. Do not falsely mark the integration as connected.
+
+Before modifying an existing Supabase project, inspect its current schema and migrations. Avoid dropping or overwriting existing tables or data without explicit authorization.
+
+Start by establishing the project structure, defining the database schema and RLS policies, and implementing the responsive dashboard shell. Then connect each module to real Supabase data and test it end to end.
+
+The final application must look premium, work reliably, protect user data, and be suitable for further production deployment.
